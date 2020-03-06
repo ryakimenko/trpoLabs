@@ -5,102 +5,178 @@ typedef struct Point {
     int x;
     int y;
 };
+
 typedef struct Triangle {
     struct Point p1;
     struct Point p2;
     struct Point p3;
 };
+
 typedef struct Circle {
     struct Point centre;
-    float radius;
+    int radius;
 };
 
 int whatshape(char a[], int n)
 {
-    int i,j;
-    for (i = 0; i < n; i++)
-    {
+    int i, j;
+    for (i = 0; i < n; i++) {
         if (a[i] == ' ')
             break;
-        if ((a[i] == 'c' || a[i] == 'C')
-            && (a[i + 1] == 'i' || a[i + 1] == 'I')
+        if ((a[i] == 'c' || a[i] == 'C') && (a[i + 1] == 'i' || a[i + 1] == 'I')
             && (a[i + 2] == 'r' || a[i + 2] == 'R')
             && (a[i + 3] == 'c' || a[i + 3] == 'C')
             && (a[i + 4] == 'l' || a[i + 4] == 'L')
-            && (a[i + 5] == 'e' || a[i + 5] == 'E')) 
-        {
-            for(j = i+6; a[j] != '('; j++)
-            {
-                if(a[j] == ' ' || a[j] == '(')
+            && (a[i + 5] == 'e' || a[i + 5] == 'E')) {
+            for (j = i + 6; a[j] != '('; j++) {
+                if (a[j] == ' ' || a[j] == '(')
                     break;
                 else
                     return 0;
             }
             return 1;
-        }
-        else 
+        } else
             return 0;
-            if ((a[i] == 'T' || a[i] == 'T')
-                && (a[i + 1] == 'r' || a[i + 1] == 'R')
-                && (a[i + 2] == 'i' || a[i + 2] == 'I')
-                && (a[i + 3] == 'a' || a[i + 3] == 'A')
-                && (a[i + 4] == 'n' || a[i + 4] == 'N')
-                && (a[i + 5] == 'g' || a[i + 5] == 'G')
-                && (a[i + 6] == 'e' || a[i + 6] == 'E'))
-                return 2;
-            else 
-                return 0;
+        if ((a[i] == 't' || a[i] == 'T') && (a[i + 1] == 'r' || a[i + 1] == 'R')
+            && (a[i + 2] == 'i' || a[i + 2] == 'I')
+            && (a[i + 3] == 'a' || a[i + 3] == 'A')
+            && (a[i + 4] == 'n' || a[i + 4] == 'N')
+            && (a[i + 5] == 'g' || a[i + 5] == 'G')
+            && (a[i + 6] == 'e' || a[i + 6] == 'E'))
+            return 2;
+        else
+            return 0;
     }
 }
 
 int hooks(char a[], int n)
 {
     int i, j;
-    for(i = 0; a[i] != '('; i++)
-    for(i=i+1; i<n; i++)
-    {
-        if(( a[i]>= 48 && a[i] <= 57) || a[i] = ' ' || a[i] == ',')
-            break;
-        if(a[i] == ')')
-        {
-            for(i= i+1; i<n; i++)
-            {
-            if(a[i] == ' ')
-                break;
-            if(a[i] == EOF)
-                return 1;
-            else
-                return 0;
+    int k = 0;
+    j = 0;
+    for (k; a[k] != '\0'; k++) {
+        if (a[k] == '(')
+            j++;
+    }
+    if (j != 1)
+        return 0;
+    for (k = 0; a[k] != '('; k++)
+        ;
+
+    for (i = k + 1; i < n; i++) {
+        if ((a[i] < 0x30 && a[i] > 0x39) && a[i] != ' ' && a[i] != ','
+            && a[i] != ')')
+            return 0;
+        if (a[i] == ')') {
+            for (j = i + 1; j < n; j++) {
+                if (a[j] == ' ')
+                    break;
+                if (a[j] == '\0' || a[j] == '\n')
+                    return 1;
+                else {
+                    return 0;
+                }
             }
         }
-        else
-            return 0;  
     }
-
+    return 1;
 }
 
 int coordinates(int shape, char a[], int n)
 {
     int i, j, k;
+    int m;
+    for (i = 0; a[i] != '('; i++)
+        ;
+
     if (shape == 1) {
-        for (i = 0; i < n; i++) {
-            if (a[i] == ' ' || (a[i] >= 65 && a[i] <= 90)
-                || (a[i] >= 97 && a[i] <= 122))
-                break;
-            if (a[i] == '(') {
-                for (j = i + 1; a[j] >= 48 && a[j] <= 57; j++) {
-                    if (a[j] == ' ')
-                        break;
+        i += 1;
+        m = 2;
+        if ((a[i] < 0x30 && a[i] > 0x39) && a[i] != ' ')
+            return 0;
+        do {
+            if ((a[i] == ',' || a[i] == ')') && (m == 1 || m == 2))
+                return 0;
+            if ((a[i] < 0x30 && a[i] > 0x39) && a[i] != ',' && a[i] != ' ')
+                return 0;
+            if ((a[i] >= 0x30 && a[i] <= 0x39)) {
+                if (m == 1 && (a[i + 1] == ',' || a[i + 1] == ' ')) {
+                    m = m - 1;
                 }
-                for(j; a[j] != ' '; j++){
-                    
+                if (a[i + 1] == ' ' && m == 2) {
+                    m = m - 1;
                 }
             }
+            i = i + 1;
+        } while (m != 0);
+        m = 1;
+        if (a[i] == ' ') {
+            do {
+                if (a[i] != ',' && a[i] != ' ')
+                    return 0;
+                if (a[i] == ',')
+                    m--;
+                i++;
+            } while (m != 0);
+            m = 1;
+            do {
+                if ((a[i] < 0x30 && a[i] > 0x39) && a[i] != ' ')
+                    return 0;
+                if ((a[i] >= 0x30 && a[i] <= 0x39)
+                    && (a[i + 1] == ' ' || a[i + 1] == ')'))
+                    m--;
+                if (a[i] == ')' && m == 1)
+                    return 0;
+                i++;
+            } while (m != 0);
+            for (i; a[i] != ')'; i++) {
+                if (a[i] == ' ')
+                    break;
+                else
+                    return 0;
+            }
+            return 1;
         }
+        if (a[i] == ',') {
+            m = 1;
+            do {
+                if ((a[i] < 0x30 && a[i] > 0x39) && a[i] != ' ')
+                    return 0;
+                if ((a[i] >= 0x30 && a[i] <= 0x39)
+                    && (a[i + 1] == ' ' || a[i + 1] == ')'))
+                    m--;
+                if (a[i] == ')' && m == 1)
+                    return 0;
+                i++;
+            } while (m != 0);
+            for (i; a[i] != ')'; i++) {
+                if (a[i] == ' ')
+                    break;
+                else
+                    return 0;
+            }
+            return 1;
+        } else
+            return 0;
     }
 }
 
 int main()
 {
+    char arr[1000];
+    for (int i = 0; i < 1000; i++)
+        arr[i] = '\0';
+    fgets(arr, 1000, stdin);
+    int Whatshape, Hooks, Coordinates;
+    Whatshape = whatshape(arr, 1000);
+    Hooks = hooks(arr, 1000);
+    Coordinates = coordinates(Whatshape, arr, 1000);
+    if (Whatshape == 1 && Hooks == 1 && Coordinates == 1)
+        printf("All Good");
+    else
+        printf("Error\n Shape = %d\n Hooks = %d\n Coordinates = %d\n",
+               Whatshape,
+               Hooks,
+               Coordinates);
     return 0;
 }
