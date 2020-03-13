@@ -1,21 +1,21 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct Point {
-    int x;
-    int y;
-};
+typedef struct {
+    long int x;
+    long int y;
+}Point;
 
-typedef struct Triangle {
-    struct Point p1;
-    struct Point p2;
-    struct Point p3;
-};
+typedef struct {
+    Point p1;
+    Point p2;
+    Point p3;
+}Triangle;
 
-typedef struct Circle {
-    struct Point centre;
-    int radius;
-};
+typedef struct {
+    Point centre;
+    long int radius;
+}Circle;
 
 int whatshape(char a[], int n)
 {
@@ -84,7 +84,7 @@ int hooks(char a[], int n)
 
 int coordinates(int shape, char a[], int n)
 {
-    int i, j, k;
+    int i;
     int m;
     for (i = 0; a[i] != '('; i++)
         ;
@@ -161,9 +161,28 @@ int coordinates(int shape, char a[], int n)
     }
 }
 
+void write(char arr[], Circle circ[], int j)
+{
+    char* a;
+    char* end;
+    a = &arr[0];
+    int i;
+    for(i = 0; arr[i] !='('; i++)
+        a++;
+    a++;
+    circ[j].centre.x = strtol(a, &end,10);
+    circ[j].centre.y = strtol(end, &end, 10);
+    a = &arr[0];
+    for(i=0 ; arr[i] !=','; i++)
+        a++;
+    a++;
+    circ[j].radius = strtol(a, NULL, 10);
+}
+
 int main()
 {
     char arr[1000];
+    Circle circ[10];
     for (int i = 0; i < 1000; i++)
         arr[i] = '\0';
     fgets(arr, 1000, stdin);
@@ -172,7 +191,11 @@ int main()
     Hooks = hooks(arr, 1000);
     Coordinates = coordinates(Whatshape, arr, 1000);
     if (Whatshape == 1 && Hooks == 1 && Coordinates == 1)
-        printf("All Good");
+    {
+        printf("All Good\n");
+        write(arr, circ,0);
+        printf("x = %ld, y = %ld, radius = %ld", circ[0].centre.x,circ[0].centre.y, circ[0].radius);
+    }
     else
         printf("Error\n Shape = %d\n Hooks = %d\n Coordinates = %d\n",
                Whatshape,
